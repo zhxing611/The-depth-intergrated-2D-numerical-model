@@ -1,0 +1,24 @@
+<html>
+<body>
+<pre>
+<h1>Build Log</h1>
+<h3>
+--------------------Configuration: swefvm - Win32 Release--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating temporary file "C:\Users\DELL\AppData\Local\Temp\RSP8B39.tmp" with contents
+[
+/browser:"Release/" /compile_only /nologo /warn:nofileopt /module:"Release/" /object:"Release/" 
+"C:\Users\DELL\Desktop\C&G\Manuscript\Computer code\3.2\swefvm.f90"
+]
+<h3>Output Window</h3>
+Compiling Fortran...
+C:\Users\DELL\Desktop\C&G\Manuscript\Computer code\3.2\swefvm.f90
+
+
+
+<h3>Results</h3>
+swefvm.obj - 0 error(s), 0 warning(s)
+</pre>
+</body>
+</html>
