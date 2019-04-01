@@ -1,0 +1,39 @@
+<html>
+<body>
+<pre>
+<h1>Build Log</h1>
+<h3>
+--------------------Configuration: swefvm - Win32 Release--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating temporary file "C:\Users\DELL\AppData\Local\Temp\RSPCD1.tmp" with contents
+[
+/compile_only /nologo /warn:nofileopt /module:"Release/" /object:"Release/" 
+"E:\Roe\swefvm.f90"
+]
+Creating temporary file "C:\Users\DELL\AppData\Local\Temp\RSPCE2.tmp" with contents
+[
+kernel32.lib /nologo /subsystem:console /incremental:no /pdb:"Release/swefvm.pdb" /machine:I386 /out:"Release/swefvm.exe" 
+.\Release\auxfuncs.obj
+.\Release\auxsubs.obj
+.\Release\buildMeshData.obj
+.\Release\initialization.obj
+.\Release\module.obj
+.\Release\readGMSHMesh.obj
+.\Release\results_output.obj
+.\Release\swe.obj
+.\Release\swefvm.obj
+]
+Creating command line "link.exe @C:\Users\DELL\AppData\Local\Temp\RSPCE2.tmp"
+<h3>Output Window</h3>
+Compiling Fortran...
+E:\Roe\swefvm.f90
+Linking...
+
+
+
+<h3>Results</h3>
+swefvm.exe - 0 error(s), 0 warning(s)
+</pre>
+</body>
+</html>
