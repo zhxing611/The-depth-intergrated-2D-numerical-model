@@ -745,67 +745,6 @@ do i=1,nFaces   !calculate tsunami force and maximum force
 	ssfy=nb(curFace)**2*g*Q3(curFace)*dsqrt(Q2(curFace)**2+Q3(curFace)**2)/&
      		(Q1(curFace)**(7.0/3.0))*dsqrt(1+Sox(curFace)**2+Soy(curFace)**2)
 
-!   vegetation resistance
-    vfx=0.0
-	vfy=0.0
-	if(Q1(curFace).lt.0.5114754)then
-	  Cd(curFace)=8.994709
-    elseif(Q1(curFace).ge.0.5114754.and.Q1(curFace).lt.0.9836066)then
-	  Cd(curFace)=8.994709+(Q1(curFace)-0.5114754)/(0.9836066-0.5114754)*(7.107584-8.994709)
-	
-	elseif(Q1(curFace).ge.0.9836066.and.Q1(curFace).lt.1.495082)then
-	 Cd(curFace)=7.107584+(Q1(curFace)-0.9836066)/(1.495082-0.9836066)*(5.908289-7.107584)
-	
-	 elseif(Q1(curFace).ge.1.495082.and.Q1(curFace).lt.2.045902)then
-	 Cd(curFace)=5.943563+(Q1(curFace)-1.495082)/(2.045902-1.495082)*(5.026455-5.908289)
-
-	elseif(Q1(curFace).ge.2.045902.and.Q1(curFace).lt.2.518033)then
-	Cd(curFace)=5.026455+(Q1(curFace)-2.045902)/(2.518033-2.045902)*(4.268078-5.026455)
-
-	elseif(Q1(curFace).ge.2.518033.and.Q1(curFace).lt.3.108197)then
-	Cd(curFace)=4.268078+(Q1(curFace)-2.518033)/(3.108197-2.518033)*(3.703704-4.268078)
-	
-	elseif(Q1(curFace).ge.3.108197.and.Q1(curFace).lt.3.619672)then
-	Cd(curFace)=3.703704+(Q1(curFace)-3.108197)/(3.619672-3.108197)*(3.368607-3.703704)
-
-	elseif(Q1(curFace).ge.3.619672.and.Q1(curFace).lt.4.131148)then
-	Cd(curFace)=3.368607+(Q1(curFace)-3.619672)/(4.131148-3.619672)*(3.24515-3.368607)
-
-    elseif(Q1(curFace).ge.4.131148.and.Q1(curFace).lt.4.52459)then
-	Cd(curFace)=3.24515+(Q1(curFace)-4.131148)/(4.52459-4.131148)*(3.227513-3.24515)
-
-	elseif(Q1(curFace).ge.4.52459.and.Q1(curFace).lt.5.07541)then
-	Cd(curFace)=3.227513+(Q1(curFace)-4.52459)/(5.07541-4.52459)*(3.174603-3.227513)
-
-	
-	elseif(Q1(curFace).ge.5.07541.and.Q1(curFace).lt.5.62623)then
-	Cd(curFace)=3.174603+(Q1(curFace)-5.07541)/(5.62623-5.07541)*(3.104056-3.174603)
-
-	elseif(Q1(curFace).ge.5.62623.and.Q1(curFace).lt.6.098361)then
-	Cd(curFace)=3.104056+(Q1(curFace)-5.62623)/(6.098361-5.62623)*(3.015873-3.104056)
-
-    elseif(Q1(curFace).ge.6.098361.and.Q1(curFace).lt.6.531148)then
-	Cd(curFace)=3.015873+(Q1(curFace)-6.098361)/(6.531148-6.098361)*(2.945326-3.015873)
-
-   elseif(Q1(curFace).ge.6.531148.and.Q1(curFace).lt.7.081967)then
-	Cd(curFace)=2.945326+(Q1(curFace)-6.531148)/(7.081967-6.531148)*(2.857143-2.945326)
-
-    elseif(Q1(curFace).ge.7.081967.and.Q1(curFace).lt.7.632787)then
-	Cd(curFace)=2.857143+(Q1(curFace)-7.081967)/(7.632787-7.081967)*(2.680776-2.857143)
-
-    elseif(Q1(curFace).ge.7.632787.and.Q1(curFace).lt.8.02623)then
-	Cd(curFace)=2.680776+(Q1(curFace)-7.632787)/(8.02623-7.632787)*(2.557319-2.680776)
-	else
-
-	Cd(curFace)=2.557319
-
-	endif
-	 
-if(faceCenters(curFace,1).ge.5700.0.and.faceCenters(curFace,1).le.5800.0)then
-       vfx=0.5*0.1*Cd(curFace)*0.224*min(8.0,Q1(curFace))*Q2(curFace)*dsqrt(Q2(curFace)**2+Q3(curFace)**2)/(Q1(curFace)**2)
-       vfy=0.5*0.1*Cd(curFace)*0.224*min(8.0,Q1(curFace))*Q3(curFace)*dsqrt(Q2(curFace)**2+Q3(curFace)**2)/(Q1(curFace)**2)
-endif
-
 
 
 
@@ -831,8 +770,8 @@ endif
 
 !        ***  new full expression: slope source term is well balanced      **
 
-	HiVi2(curFace)=(Swx-ssfx-vfx)*face2DArea(curFace) + slopeTermx
-	HiVi3(curFace)=(Swy-ssfy-vfy)*face2DArea(curFace) + slopeTermy
+	HiVi2(curFace)=(Swx-ssfx)*face2DArea(curFace) + slopeTermx
+	HiVi3(curFace)=(Swy-ssfy)*face2DArea(curFace) + slopeTermy
 
 !c       ***  old full expression: slope source term is not well balanced  **
 !	HiVi2(curFace)=(Swx-ssfx+(g*Q1(curFace)*Sox(curFace)))*face2DArea(curFace)
