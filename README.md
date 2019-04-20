@@ -22,7 +22,7 @@ Novelty: The depth-averaged 2D hydrodynamic model is further modified by introdu
 # Model operation
 (1) Users can download the program file by clicking Option "Download ZIP" in "Clone or download" under Title "Code".
 
-(2) Before running program, users need to build a new "input" folder which contains "ctr.DAT" file and "untitled.MSH" file provided in Title "Code", and a "result " folder which is used for storing output results.
+(2) Before running program, users need to build a new "input" folder which contains "ctr.DAT" file, "eta.DAT" and "untitled.MSH" file provided in Title "Code", and a "result " folder which is used for storing output results.
 
 (3) Users can click main program “swefvm.dsw” and enter the compilation environment to modify computer code and execute the program. The Option “!” is used to execute the program.
 
