@@ -11,7 +11,7 @@ Telephone number: 00186-0411-84763189
 
 Program size: 1.38 MB
 
-Description: The depth-averaged 2D hydrodynamic model is further modified by introducing treatment technology of wet-dry boundary and considering vegetation effects base on a two-dimensional numerical model for hydrodynamics and sediment transport (HydroSed2D). 
+Description: The depth-averaged 2D hydrodynamic model was further modified by introducing treatment technology of wet-dry boundary and considering vegetation effects base on a two-dimensional numerical model for hydrodynamics and sediment transport (HydroSed2D). 
 
 # Prerequisite Software and data
 (1) Mesh generator （Gmsh is used in present model）
@@ -20,11 +20,11 @@ Description: The depth-averaged 2D hydrodynamic model is further modified by int
 
 (3) Data post-processing software, e.g., Matlab, Tecplot, Microsoft office
 # Model operation
-(1) Users can download the program file by clicking "Download ZIP" option in "Clone or download" under "Code" Title.
+(1) Users can download the program file by clicking Option "Download ZIP" in "Clone or download" under Title "Code".
 
-(2) Before running progarm, users need to build a "input" file which contaians "ctr.dat" and "untitled.msh" provided under "Code" Title, and a "result " file which stores output results.
+(2) Before running program, users need to build a "input" folder which contains "ctr.DAT" file and "untitled.MSH" file provided under Title "Code" , and a "result " file which stores output results.
 
-(3) Users can click main program “swefvm.dsw” and enter the compilation environment to modify computer code and execute the program. The option “!” is used to execute the file.
+(3) Users can click main program “swefvm.dsw” and enter the compilation environment to modify computer code and execute the program. The Option “!” is used to execute the program.
 
 # Model application
-The computer code under "Code" Title is used to simulate tsunami propagation on a real-scale vegetated beach. Present numerical  are validated by three experimental cases of dam-break flow in a dry channel with a hump, solitary wave through a vegetated channel, tsunami wave run-up in Monai Valley. The setting of corresponding conditions in computer code for these three experimental cases can be found in Subtitle "branch" under Title "Code" 
+The computer code under Title "Code" is used to simulate tsunami propagation on a real-scale vegetated beach. Present numerical  are validated by three experimental cases of dam-break flow in a dry channel with a hump, solitary wave through a vegetated channel and tsunami wave run-up in Monai Valley. The setting of corresponding conditions in computer code for these three experimental cases can be found in Subtitle "branch" under Title "Code" 
