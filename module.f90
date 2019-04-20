@@ -29,8 +29,8 @@ MODULE  COMMON_MODULE
 
         integer*4 maxnodes_, maxedges_, maxfaces_, maxboundaryedges_,&
 				  maxboundarypoints_,maxnodefaces_
-        parameter(maxnodes_ = 20000, maxedges_ = 60000, maxfaces_ = 60000, &
-		          maxboundaryedges_ = 50000,maxboundarypoints_=10000,maxnodefaces_=10)
+        parameter(maxnodes_ = 26000, maxedges_ = 60000, maxfaces_ = 50000, &
+		          maxboundaryedges_ = 2200,maxboundarypoints_=5000,maxnodefaces_=10)
 
 		integer*4 ELEDGES       !maximum edges for each cell
 		parameter(ELEDGES=3)
@@ -117,7 +117,7 @@ MODULE  COMMON_MODULE
 !                        = 1 in the calculation domain
 
 		REAL(8),DIMENSION(maxfaces_)::HiVi1,HiVi2,HiVi3,HiVi3_c,FdotN1,FdotN2,gradcsedx,gradcsedy,&
-									  FdotN3,FdotN4_c,Q1,Q2,Q3,Q4_c,csed,Q1max,UMmax,VNmax,deep,velocityx,velocityy,Qs,FdotN4,bednet,Cd,Tsunamiforce,Dragforce
+									  FdotN3,FdotN4_c,Q1,Q2,Q3,Q4_c,csed,Qs,FdotN4,bednet,Cd
 		!Q1:cell center xi value (free surface elevation)
 		!Q2:cell center value of uh
 		!Q3:cell center value of vh
@@ -305,9 +305,9 @@ MODULE  COMMON_MODULE
         real*8 qflat
 
 		!variables for node values
-		REAL(8),DIMENSION(maxnodes_)::nodeQ1,nodeQ2,nodeQ3,nodeZSurf,nodecsed,nodeQ1max,nodeVNmax,nodeUMmax,nodegradcsedx,nodegradcsedy,nodedeep,nodevelocityx,nodevelocityy
+		REAL(8),DIMENSION(maxnodes_)::nodeQ1,nodeQ2,nodeQ3,nodeZSurf,nodecsed,nodegradcsedx,nodegradcsedy
 		REAL(8),DIMENSION(maxnodes_)::nodeU,nodeV,nodeSox,nodeSoy 
-		REAL(8) meanH,meanU,meanV,meanC,meanvelocityx,meanvelocityy,meandeep,meanQ1max,meanUMmax,meanVNmax
+		REAL(8) meanH,meanU,meanV,meanC
         
         integer*4 ios, ierror
 
@@ -317,6 +317,6 @@ MODULE  COMMON_MODULE
 		integer*4 nStep
 	    integer*4 ISTAT
 	    integer aa
-		integer, parameter::nDEMPoints=61
+		integer, parameter::nDEMPoints=4636
 		real*8 wse(nDEMPoints,3)
 END MODULE  COMMON_MODULE 
