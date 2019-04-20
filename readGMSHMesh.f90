@@ -15,14 +15,9 @@
 !    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 !    GNU General Public License for more details.
 !
-!    You should have received a copy of the GNU General Public License
-!    along with HydroSed2D.  If not, see <http://www.gnu.org/licenses/>.
-!
 !    Base on HydroSed2D, Mingliang Zhang and Hongxing Zhang further developed the depth-averaged 2D hydrodynamic model 
-!    by introducing treatment technology of wet-dry boundary and considering vegetation effects. 
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-!   Read mesh from GMSH format files
+!    by introducing treatment technology of wet-dry boundary. 
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!   Read mesh from GMSH format files
 	subroutine readGMSHMesh()
 	USE COMMON_MODULE
 	implicit none
@@ -86,7 +81,7 @@
 
 100	 nBoundaryEdges=iTemp1
 	 nFaces=nElements - nBoundaryEdges
-     
+
 	 rewind 1
 
      !read out 4 line of comments
@@ -108,7 +103,7 @@
 	 read(1,*) nElements
 
 	 do i = 1, nBoundaryEdges 
- 		 read(1,*) iDummy,nElementType,iDummy,mark_temp,iDummy,&
+ 		 read(1,*) iDummy,nElementType,iDummy,mark_temp,iDummy, &
      			   points_temp(1),points_temp(2)
 
 	     	boundaryEdgeMarkers(i)=mark_temp
@@ -117,7 +112,7 @@
 	 enddo
 
 	 do i = 1, nFaces 
- 		 read(1,*) iDummy,nElementType,iDummy, mark_temp,iDummy,&
+ 		 read(1,*) iDummy,nElementType,iDummy, mark_temp,iDummy, &
      			   points_temp(1),points_temp(2),points_temp(3)
 
 			facePoints(i,1)=points_temp(1)
