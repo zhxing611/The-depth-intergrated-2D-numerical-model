@@ -9,7 +9,7 @@ Year first available: 2008
 
 Telephone number: 00186-0411-84763189
 
-Program size: 22.3 MB
+Program size: 1.38 MB
 
 Description: The depth-averaged 2D hydrodynamic model is further modified by introducing treatment technology of wet-dry boundary and considering vegetation effects base on a two-dimensional numerical model for hydrodynamics and sediment transport (HydroSed2D). 
 
@@ -19,4 +19,5 @@ Description: The depth-averaged 2D hydrodynamic model is further modified by int
 (2) Fortran language compiler
 
 (3) Data post-processing software, e.g., Matlab, Tecplot, Microsoft office
-# Installation
+# Model operation
+
