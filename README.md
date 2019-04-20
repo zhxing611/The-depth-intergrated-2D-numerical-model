@@ -1,6 +1,6 @@
 # The-depth-intergrated-2D-numerical-model
-Code name: HydroSed2D
-Developer: Xiaofeng Liu
+##Code name: HydroSed2D
+##Developer: Xiaofeng Liu
 User and e-mail: Mingliang Zhang (zhmliang_mail@126.com); Hongxing Zhang (zhxing611@163.com)
 Contact address: School of Ocean Science and Environment, Dalian Ocean University, Dalian, Liaoning,
 116023, China
