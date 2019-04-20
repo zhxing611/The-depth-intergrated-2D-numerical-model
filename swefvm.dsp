@@ -96,15 +96,15 @@ SOURCE=.\auxsubs.f90
 # Begin Source File
 
 SOURCE=.\buildMeshData.f90
-DEP_F90_BUILD=\
-	".\Release\COMMON_MODULE.mod"\
+NODEP_F90_BUILD=\
+	".\Debug\COMMON_MODULE.mod"\
 	
 # End Source File
 # Begin Source File
 
 SOURCE=.\initialization.f90
-DEP_F90_INITI=\
-	".\Release\COMMON_MODULE.mod"\
+NODEP_F90_INITI=\
+	".\Debug\COMMON_MODULE.mod"\
 	
 # End Source File
 # Begin Source File
@@ -114,43 +114,43 @@ SOURCE=.\module.f90
 # Begin Source File
 
 SOURCE=.\readGambitMesh.f90
-DEP_F90_READG=\
-	".\Release\COMMON_MODULE.mod"\
+NODEP_F90_READG=\
+	".\Debug\COMMON_MODULE.mod"\
 	
 # End Source File
 # Begin Source File
 
 SOURCE=.\readGMSHMesh.f90
-DEP_F90_READGM=\
-	".\Release\COMMON_MODULE.mod"\
+NODEP_F90_READGM=\
+	".\Debug\COMMON_MODULE.mod"\
 	
 # End Source File
 # Begin Source File
 
 SOURCE=.\restart_output.f90
-DEP_F90_RESTA=\
-	".\Release\COMMON_MODULE.mod"\
+NODEP_F90_RESTA=\
+	".\Debug\COMMON_MODULE.mod"\
 	
 # End Source File
 # Begin Source File
 
 SOURCE=.\results_output.f90
-DEP_F90_RESUL=\
-	".\Release\COMMON_MODULE.mod"\
+NODEP_F90_RESUL=\
+	".\Debug\COMMON_MODULE.mod"\
 	
 # End Source File
 # Begin Source File
 
 SOURCE=.\swe.f90
-DEP_F90_SWE_F=\
-	".\Release\COMMON_MODULE.mod"\
+NODEP_F90_SWE_F=\
+	".\Debug\COMMON_MODULE.mod"\
 	
 # End Source File
 # Begin Source File
 
 SOURCE=.\swefvm.f90
-DEP_F90_SWEFV=\
-	".\Release\COMMON_MODULE.mod"\
+NODEP_F90_SWEFV=\
+	".\Debug\COMMON_MODULE.mod"\
 	
 # End Source File
 # End Target

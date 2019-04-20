@@ -18,8 +18,8 @@
 !    You should have received a copy of the GNU General Public License
 !    along with HydroSed2D.  If not, see <http://www.gnu.org/licenses/>.
 !
-!    Base on HydroSed2D, Mingliang Zhang and Hongxing Zhang further developed the depth-averaged 2D hydrodynamic model 
-!    by introducing treatment technology of wet-dry boundary and considering vegetation effects. 
+!  Base on HydroSed2D, Mingliang Zhang and Hongxing Zhang further developed the depth-averaged 2D hydrodynamic model 
+!  by introducing treatment technology of wet-dry boundary. 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 !   Read mesh from GMSH format files
@@ -124,8 +124,8 @@
 			facePoints(i,2)=points_temp(2)
 			facePoints(i,3)=points_temp(3)
 
-			faceEdgesNum(i)=3 !GMSH only has triangle elements
-			facePoints(i,4)=points_temp(1) !make a loop
+			faceEdgesNum(i)=3 
+			facePoints(i,4)=points_temp(1) 
  	 enddo
 
      close(1)

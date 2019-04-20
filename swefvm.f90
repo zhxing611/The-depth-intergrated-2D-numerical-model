@@ -11,6 +11,7 @@
     implicit none
 	real*8 timestart,timestop,timetotal
 
+	
 	write(*,*) '-------------------------------------------------------------------'
     write(*,*) '|   Shallow    | HydroSed2D: Shallow Water Equation with Sediment |'
 	write(*,*) '|   Water      |                                                  |'
@@ -23,8 +24,7 @@
 	write(*,*) '--------------------------------------------------------------------'
     write(*,*) '|Base on HydroSed2D£¬Mingliang Zhang and Hongxing Zhang further     |'
 	write(*,*) '|developed the depth-averaged 2D hydrodynamic model by introducing  |'
-    write(*,*) '|treatment technology of wet-dry boundary and considering vegetation|'       
-	write(*,*) '|effects.                                                           |'                                           
+    write(*,*) '|treatment technology of wet-dry boundary                           |'                                                                                                          
 	write(*,*) '|Mingliang Zhang (zhmliang_mail@126.com);                           |'
 	write(*,*) '|Hongxing Zhang (zhxing611@163.com)                                 |'
 	write(*,*) '|School of Ocean Science and Environment, Dalian Ocean University   |'
@@ -39,6 +39,13 @@
 	call results_output
 
 
+!-------------read input water level data
+	  open(2,FILE='input/h.dat',STATUS='UNKNOWN')
+	    do aa=1,nDEMPoints
+   	     read(2,*) wse(aa,1),wse(aa,2)
+		 enddo
+
+	  close(2)
      
 	!calculation
 	do while (t <= tstop) 
@@ -46,15 +53,14 @@
 		nStep=nStep+1
 
 		call swe
+	    	
 
-		
 		call results_output
     
-     if(mod(nstep,10).eq.0)write(16,*) t, UM(20931),VN(20931)    !5800   
-     if(mod(nstep,10).eq.0)write(17,*) t,faceCenters(20931,1),eta(20931) 
-	 if(mod(nstep,10).eq.0)write(18,*) t, Tsunamiforce(20931)
+	 if(mod(nstep,250).eq.0)write(111,*) t, eta(22554)  
+	 if(mod(nstep,250).eq.0)write(112,*) t, eta(3225)  
+	 if(mod(nstep,250).eq.0)write(113,*) t, eta(5426)
 
-	
 		t=t+dt
 
 		tscount=tscount+1
