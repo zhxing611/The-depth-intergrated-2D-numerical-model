@@ -18,10 +18,9 @@
 !    You should have received a copy of the GNU General Public License
 !    along with HydroSed2D.  If not, see <http://www.gnu.org/licenses/>.
 !
-!    Base on HydroSed2D, Mingliang Zhang and Hongxing Zhang further developed the depth-averaged 2D hydrodynamic model 
-!    by introducing treatment technology of wet-dry boundary and considering vegetation effects. 
+!  Base on HydroSed2D, Mingliang Zhang and Hongxing Zhang further developed the depth-averaged 2D hydrodynamic model 
+!    by introducing treatment technology of wet-dry boundary. 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
     ! build mesh's topological data which will not change: 
 	!                  e.g. face's edges 
     !                       edge's faces
@@ -57,7 +56,7 @@
 	write(*,*) 'Building mesh data ...'
 
 	!setup the elevation of each nodes
-	call interp_Elevation
+!	call interp_Elevation
 
 
 
@@ -82,14 +81,14 @@
 				 bIndicator = .FALSE.
 				 do k = 1, curEdge 
 					if((edgePoints(k,1).eq.pointsTemp(j).and.edgePoints(k,2).eq.pointsTemp(j+1)).or.&
-					   (edgePoints(k,1).eq.pointsTemp(j+1).and.edgePoints(k,2).eq.pointsTemp(j))) then !already in the list
+					   (edgePoints(k,1).eq.pointsTemp(j+1).and.edgePoints(k,2).eq.pointsTemp(j))) then 
 					   bIndicator = .TRUE.
 					   faceEdges(i,j)=k
 					   exit
 					endif
 				 enddo
           
-				 if(.not.bIndicator) then !a new edge
+				 if(.not.bIndicator) then 
 					 curEdge = curEdge + 1
 					 edgePoints(curEdge,1) = pointsTemp(j)
 					 edgePoints(curEdge,2) = pointsTemp(j+1)
@@ -98,16 +97,9 @@
 			end do
          end if
       enddo
-      !total number of edges
+   
       nEdges = curEdge
 
-      !for debug
-!      write(*,*) 'edgePoints:'
-!      do i = 1, nEdges
-!         write(*,*) edgePoints(i,1), edgePoints(i,2)
-!      end do
-
-      !edge's faces
       do i = 1, nEdges
          edgeFaces(i, 1) = -1
          edgeFaces(i, 2) = -1
@@ -123,7 +115,7 @@
 			end do
 		 end do
           
-		 if((iIndicator.ge.3).or.(iIndicator.le.0)) then !something bad happended
+		 if((iIndicator.ge.3).or.(iIndicator.le.0)) then 
              write(*,*) 'The edge is shared by more than 2 face or no face!'
 		     
              stop
@@ -134,8 +126,8 @@
 
 
 	!build the information of face's edges markers
-	binfo = 4     !default is 4-->internal
-	pointMarkers = 0 !default is outside of the domain
+	binfo = 4    
+	pointMarkers = 0 
 	do i=1,nFaces
 		do j=1,faceEdgesNum(i)
 			call checkEdgeMarkers(faceEdges(i,j),binfo(i,j))
@@ -153,7 +145,7 @@
 			!get face's j direction edge first
 			curEdge = faceEdges(i,j)
 
-			if(edgeMarkers(curEdge)==1) then    
+			if(edgeMarkers(curEdge)==1) then      
 				iIndicator=iIndicator+1
 				faceNeighbors(i,j) = -1
 				boundaryEdgeGhostCells(curEdge) = iIndicator
@@ -204,14 +196,7 @@
 
 	enddo
 
-      !for debug
-!      write(*,*) 'face Edges:'
-!      do i = 1, nFaces
-!        write(*,*) i,faceEdges(i,1), faceEdges(i,2), faceEdges(i,3)     
-!     end do 
-
-      !point's faces
-      !for each node, loop over all facePoints
+   
       do i =1, nNodes
          do j = 1, maxnodefaces_
             pointFaces(i,j) = -1
@@ -237,14 +222,6 @@
       end do   
 	     
 
-      !for debug
-!      write(*,*) 'node faces'
-!      do i = 1, nNodes
-!        write(*,*) i,pointFaces(i,1), pointFaces(i,2), pointFaces(i,3),&
-!                  pointFaces(i,4), pointFaces(i,5), pointFaces(i,6)
- !     end do
-
-	  !edge's length (projected on z=0 plane, 2D length)
 	  do i = 1, nEdges
 		 v1(1) = pcoor(edgePoints(i,1),1)
 		 v1(2) = pcoor(edgePoints(i,1),2)
@@ -257,7 +234,7 @@
 		 edgeLength(i) = dist2points(v1,v2)
 	  enddo
 
-      !face area projected on z=0 plane, 2D area
+      
       do i = 1, nFaces
 		  face2DArea(i)=0.0
 		  do j=1,faceEdgesNum(i)
@@ -268,12 +245,12 @@
 		  face2DArea(i)=face2DArea(i)/2.0
 
           if(face2DArea(i).lt.0.0) then
-!              write(*,*) 'Negative 2D area for face:', i
+!             
               face2DArea(i) = -1.0*face2DArea(i)
           end if
       enddo
 
-	  !face's edges normal vector (pointing out of the cell)
+	
 	  do i=1, nFaces
 	     !face center
 		 faceCenters(i,1)=0.0
@@ -293,9 +270,9 @@
 		 c1(2)=faceCenters(i,2)
 		 c1(3)=faceCenters(i,3)
 
-		do j=1,faceEdgesNum(i)  
+		do j=1,faceEdgesNum(i)   !for each edge
 			curEdge=faceEdges(i,j)
-          
+            !edge vector: from start to end
             v1(1) = pcoor(edgePoints(curEdge, 1), 1) -  &
                     pcoor(edgePoints(curEdge, 2), 1)
             v1(2) = pcoor(edgePoints(curEdge, 1), 2) -  &
@@ -303,7 +280,7 @@
             v1(3) = pcoor(edgePoints(curEdge, 1), 3) -  &
                     pcoor(edgePoints(curEdge, 2), 3)
 
-          
+            !edge center
             edgeCenterCoor(curEdge,1) = 0.5*(pcoor(edgePoints(curEdge, 1), 1) +  &
                          pcoor(edgePoints(curEdge, 2), 1) )
             edgeCenterCoor(curEdge,2) = 0.5*(pcoor(edgePoints(curEdge, 1), 2) +  &
@@ -371,7 +348,7 @@
                                   -v3(1)*v2(2)-v1(1)*v3(2)+v2(1)*v3(2))
 
           if(faceSubArea(i,j).lt.0.0) then
-              !write(*,*) 'Negative 2D area for face:', i
+             
               faceSubArea(i,j) = -1.0*faceSubArea(i,j)
           end if
 		end do
@@ -478,13 +455,7 @@
 			elseif(pcoor(i,1).gt.5700.0)then
 			    pcoor(i,3)=104.0+(pcoor(i,1)-5700.0)/500.0
 			endif
-			    
-
-
-
+	
 	enddo
-
-
-
 
 	end subroutine

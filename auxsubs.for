@@ -1,7 +1,7 @@
 c Aux functions 
 
 c     vector dot product C = A & B
-      subroutine vec_dot(A, B, C)
+.      subroutine vec_dot(A, B, C)
          implicit none
          real*8 A(3), B(3), C
          integer i
