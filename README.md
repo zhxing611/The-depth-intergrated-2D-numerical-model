@@ -20,4 +20,11 @@ Description: The depth-averaged 2D hydrodynamic model is further modified by int
 
 (3) Data post-processing software, e.g., Matlab, Tecplot, Microsoft office
 # Model operation
+(1) Users can download the program file by clicking "Download ZIP" option in "Clone or download" under "Code" Title.
 
+(2) Before running progarm, users need to build a "input" file which contaians "ctr.dat" and "untitled.msh" provided under "Code" Title, and a "result " file which stores output results.
+
+(3) Users can click main program “swefvm.dsp” and enter the compilation environment to modify computer code and execute the program. The option “!” is used to execute the file.
+
+# Model application
+The computer code under "Code" Title is used to simulate tsunami propagation on a real-scale vegetated beach. Present numerical  are validated by three experimental cases of dam-break flow in a dry channel with a hump, solitary wave through a vegetated channel, tsunami wave run-up in Monai Valley. The setting of corresponding conditions in computer code for these three experimental cases can be found in Subtitle "branch" under Title "Code" 
