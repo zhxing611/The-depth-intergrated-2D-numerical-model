@@ -1,4 +1,4 @@
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !    HydroSed2D Copyright (C) 2008 Xiaofeng Liu
 !
 !    License
@@ -15,14 +15,10 @@
 !    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 !    GNU General Public License for more details.
 !
-!    You should have received a copy of the GNU General Public License
-!    along with HydroSed2D.  If not, see <http://www.gnu.org/licenses/>.
-!
 !    Base on HydroSed2D, Mingliang Zhang and Hongxing Zhang further developed the depth-averaged 2D hydrodynamic model 
-!    by introducing treatment technology of wet-dry boundary and considering vegetation effects. 
+!    by introducing treatment technology of wet-dry boundary. 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-    ! build mesh's topological data which will not change: 
+	! build mesh's topological data which will not change: 
 	!                  e.g. face's edges 
     !                       edge's faces
     !                       face area
@@ -59,8 +55,6 @@
 	!setup the elevation of each nodes
 	call interp_Elevation
 
-
-
   	  curEdge = 0
       do i = 1, nFaces
          !current face's points
@@ -88,7 +82,7 @@
 					   exit
 					endif
 				 enddo
-          
+           
 				 if(.not.bIndicator) then !a new edge
 					 curEdge = curEdge + 1
 					 edgePoints(curEdge,1) = pointsTemp(j)
@@ -103,9 +97,9 @@
 
       !for debug
 !      write(*,*) 'edgePoints:'
-!      do i = 1, nEdges
+      do i = 1, nEdges
 !         write(*,*) edgePoints(i,1), edgePoints(i,2)
-!      end do
+      end do
 
       !edge's faces
       do i = 1, nEdges
@@ -131,8 +125,6 @@
                  
       enddo
 
-
-
 	!build the information of face's edges markers
 	binfo = 4     !default is 4-->internal
 	pointMarkers = 0 !default is outside of the domain
@@ -141,10 +133,8 @@
 			call checkEdgeMarkers(faceEdges(i,j),binfo(i,j))
 			edgeMarkers(faceEdges(i,j)) = binfo(i,j)
 			pointMarkers(facePoints(i,j))=1
-		
-    end do
+		end do
 	enddo
-
 
 	!build the information of face's neighbors
 	iIndicator=0 !ghost cells counter
@@ -153,27 +143,25 @@
 			!get face's j direction edge first
 			curEdge = faceEdges(i,j)
 
-			if(edgeMarkers(curEdge)==1) then    
+			if(edgeMarkers(curEdge)==1) then      !inlet
 				iIndicator=iIndicator+1
 				faceNeighbors(i,j) = -1
 				boundaryEdgeGhostCells(curEdge) = iIndicator
 				ghostCellsEdge(iIndicator)=curEdge
 				ghostCellsNeighbor(iIndicator)=i
-			elseif(edgeMarkers(curEdge)==2) then  
+			elseif(edgeMarkers(curEdge)==2) then  !outlet
 				iIndicator=iIndicator+1
 				faceNeighbors(i,j) = -2
 				boundaryEdgeGhostCells(curEdge) = iIndicator
 				ghostCellsEdge(iIndicator)=curEdge
 				ghostCellsNeighbor(iIndicator)=i
-			elseif(edgeMarkers(curEdge)==3) then  
+			elseif(edgeMarkers(curEdge)==3) then  !wall
 				iIndicator=iIndicator+1
 				faceNeighbors(i,j) = -3
 				boundaryEdgeGhostCells(curEdge) = iIndicator
 				ghostCellsEdge(iIndicator)=curEdge
 				ghostCellsNeighbor(iIndicator)=i
-
-
-			else                                  
+			else                                  !internal
 				if(edgeFaces(curEdge,1)/=i) then
 					faceNeighbors(i,j)=edgeFaces(curEdge,1)
 				else
@@ -182,7 +170,6 @@
 			endif
 		enddo
 	enddo
-
 
 	!Test the total number of ghost cells and boundary edges
 	if(iIndicator.ne.nBoundaryEdges)then
@@ -203,12 +190,12 @@
 		end do
 
 	enddo
-
+      
       !for debug
 !      write(*,*) 'face Edges:'
-!      do i = 1, nFaces
-!        write(*,*) i,faceEdges(i,1), faceEdges(i,2), faceEdges(i,3)     
-!     end do 
+      do i = 1, nFaces
+!         write(*,*) faceEdges(i,1), faceEdges(i,2), faceEdges(i,3)     
+      end do 
 
       !point's faces
       !for each node, loop over all facePoints
@@ -228,21 +215,21 @@
                          maxnodefaces_! Increase maxnodefaces_.'
 					 
                      stop
-                    end if                  
+                    end if
+                  
 					pointFaces(i,iIndicator)=j
-				end if
+				end if	
 			end do
          end do
 		 pointNFaces(i)=iIndicator
-      end do   
-	     
+      end do      
 
       !for debug
 !      write(*,*) 'node faces'
-!      do i = 1, nNodes
-!        write(*,*) i,pointFaces(i,1), pointFaces(i,2), pointFaces(i,3),&
-!                  pointFaces(i,4), pointFaces(i,5), pointFaces(i,6)
- !     end do
+      do i = 1, nNodes
+!         write(*,*) pointFaces(i,1), pointFaces(i,2), pointFaces(i,3),
+!     *              pointFaces(i,4), pointFaces(i,5), pointFaces(i,6)
+      end do
 
 	  !edge's length (projected on z=0 plane, 2D length)
 	  do i = 1, nEdges
@@ -268,34 +255,41 @@
 		  face2DArea(i)=face2DArea(i)/2.0
 
           if(face2DArea(i).lt.0.0) then
-!              write(*,*) 'Negative 2D area for face:', i
+!             write(*,*) 'Negative 2D area for face:', i
               face2DArea(i) = -1.0*face2DArea(i)
           end if
       enddo
 
 	  !face's edges normal vector (pointing out of the cell)
+	 
+!!!!!!!!************************************************************************		 
+
+	  
 	  do i=1, nFaces
 	     !face center
 		 faceCenters(i,1)=0.0
 		 faceCenters(i,2)=0.0
-		 faceCenters(i,3)=0.0
-		 
-		 do j=1,faceEdgesNum(i)		    
-			faceCenters(i,1)=faceCenters(i,1)+pcoor(facePoints(i,j),1)
-			faceCenters(i,2)=faceCenters(i,2)+pcoor(facePoints(i,j),2)
-			faceCenters(i,3)=faceCenters(i,3)+pcoor(facePoints(i,j),3)	 
-	     end do
+		 faceCenters(i,3)=0.0		
+	
+		do j=1,faceEdgesNum(i)
+			     
+			  faceCenters(i,1)=faceCenters(i,1)+pcoor(facePoints(i,j),1)
+			  faceCenters(i,2)=faceCenters(i,2)+pcoor(facePoints(i,j),2)
+              faceCenters(i,3)=faceCenters(i,3)+pcoor(facePoints(i,j),3)
+			
+		 end do
 		 faceCenters(i,1)=faceCenters(i,1)/faceEdgesNum(i)
 		 faceCenters(i,2)=faceCenters(i,2)/faceEdgesNum(i)
 		 faceCenters(i,3)=faceCenters(i,3)/faceEdgesNum(i)
 
-         c1(1)=faceCenters(i,1)	
+
+		 c1(1)=faceCenters(i,1)	
 		 c1(2)=faceCenters(i,2)
 		 c1(3)=faceCenters(i,3)
 
-		do j=1,faceEdgesNum(i)  
+		do j=1,faceEdgesNum(i)   !for each edge
 			curEdge=faceEdges(i,j)
-          
+            !edge vector: from start to end
             v1(1) = pcoor(edgePoints(curEdge, 1), 1) -  &
                     pcoor(edgePoints(curEdge, 2), 1)
             v1(2) = pcoor(edgePoints(curEdge, 1), 2) -  &
@@ -303,7 +297,7 @@
             v1(3) = pcoor(edgePoints(curEdge, 1), 3) -  &
                     pcoor(edgePoints(curEdge, 2), 3)
 
-          
+            !edge center
             edgeCenterCoor(curEdge,1) = 0.5*(pcoor(edgePoints(curEdge, 1), 1) +  &
                          pcoor(edgePoints(curEdge, 2), 1) )
             edgeCenterCoor(curEdge,2) = 0.5*(pcoor(edgePoints(curEdge, 1), 2) +  &
@@ -397,8 +391,8 @@
 	Soy=0.0
 
 	do i = 1, nFaces
-	 
-	   do j = 1, faceEdgesNum(i)	    
+	   do j = 1, faceEdgesNum(i)
+	       
 		temp=(pcoor(edgePoints(faceEdges(i,j),1),3)+pcoor(edgePoints(faceEdges(i,j),2),3))/2* &
 		     faceEdgeNormals(i,j,1)*edgeLength(faceEdges(i,j))
 		Sox(i)=Sox(i)-1.0/face2DArea(i)*temp
@@ -421,6 +415,34 @@
 
 	return
 	end
+!*************************************************************************
+	subroutine updateMeshData2()
+	USE COMMON_MODULE
+	implicit none
+
+	integer i,j
+	real*8 curEdgeNormal(3),temp
+
+	!update bed slope
+	Sox=0.0
+	Soy=0.0
+
+	do i = 1, nFaces
+	   do j = 1, faceEdgesNum(i)
+	       
+		temp=(pcoortemp(edgePoints(faceEdges(i,j),1),3)+pcoortemp(edgePoints(faceEdges(i,j),2),3))/2* &
+		     faceEdgeNormals(i,j,1)*edgeLength(faceEdges(i,j))
+		Sox(i)=Sox(i)-1.0/face2DArea(i)*temp
+	
+		temp=(pcoortemp(edgePoints(faceEdges(i,j),1),3)+pcoortemp(edgePoints(faceEdges(i,j),2),3))/2* &
+		     faceEdgeNormals(i,j,2)*edgeLength(faceEdges(i,j))
+		Soy(i)=Soy(i)-1.0/face2DArea(i)*temp
+	   end do
+	end do
+
+	return
+	end
+!*************************************************************************
 
 !   get the edge marker for a given edge 
 	subroutine checkEdgeMarkers(edge, boundaryMarker)
@@ -457,33 +479,21 @@
 
 
 !   interpolate the bed elevation according to DEM file
-	 subroutine interp_Elevation()
-	USE COMMON_MODULE,only:pcoor,nNodes,wse,aa
+	subroutine interp_Elevation()
+	USE COMMON_MODULE,only:pcoor,nNodes
 	implicit none
 
 	integer i
 	real*8 r2, r0, r
 
-   
-    do i=1,nNodes
-	
-	     	if(pcoor(i,1).le.0.0)then
-			   pcoor(i,3)=0.0
-			elseif(pcoor(i,1).gt.0.0.and.pcoor(i,1).le.500.0)then
-              pcoor(i,3)=0.0+(pcoor(i,1)-0.0)/10.0
-			elseif(pcoor(i,1).gt.500.0.and.pcoor(i,1).le.5500.0)then
-			   pcoor(i,3)=50.0+(pcoor(i,1)-500.0)/100.0
-			elseif(pcoor(i,1).gt.5500.0.and.pcoor(i,1).le.5700.0)then
-			    pcoor(i,3)=100.0+(pcoor(i,1)-5500.0)/50.0
-			elseif(pcoor(i,1).gt.5700.0)then
-			    pcoor(i,3)=104.0+(pcoor(i,1)-5700.0)/500.0
-			endif
-			    
-
-
-
-	enddo
-
+  	do i=1,nNodes
+       pcoor(i,3)=0.0D0
+      if(pcoor(i,1).gt.1.5.and.pcoor(i,1).le.2.0) then		
+		pcoor(i,3)=0.075/0.5*(pcoor(i,1)-1.5)
+	  elseif(pcoor(i,1).gt.2.0.and.pcoor(i,1).le.2.5)then
+	    pcoor(i,3)=0.075/0.5*(2.5-pcoor(i,1))
+	endif
+	enddo 
 
 
 

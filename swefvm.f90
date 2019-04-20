@@ -11,6 +11,7 @@
     implicit none
 	real*8 timestart,timestop,timetotal
 
+
 	write(*,*) '-------------------------------------------------------------------'
     write(*,*) '|   Shallow    | HydroSed2D: Shallow Water Equation with Sediment |'
 	write(*,*) '|   Water      |                                                  |'
@@ -23,8 +24,7 @@
 	write(*,*) '--------------------------------------------------------------------'
     write(*,*) '|Base on HydroSed2D£¬Mingliang Zhang and Hongxing Zhang further     |'
 	write(*,*) '|developed the depth-averaged 2D hydrodynamic model by introducing  |'
-    write(*,*) '|treatment technology of wet-dry boundary and considering vegetation|'       
-	write(*,*) '|effects.                                                           |'                                           
+    write(*,*) '|treatment technology of wet-dry boundary                           |'                                                                                                          
 	write(*,*) '|Mingliang Zhang (zhmliang_mail@126.com);                           |'
 	write(*,*) '|Hongxing Zhang (zhxing611@163.com)                                 |'
 	write(*,*) '|School of Ocean Science and Environment, Dalian Ocean University   |'
@@ -39,23 +39,23 @@
 	call results_output
 
 
-     
+!-------------read input water level data
+
 	!calculation
 	do while (t <= tstop) 
 		write(*,*) 't = ', t, ' s out of ', tstop, 's' 
 		nStep=nStep+1
 
-		call swe
-
-		
+		call swe		
 		call results_output
-    
-     if(mod(nstep,10).eq.0)write(16,*) t, UM(20931),VN(20931)    !5800   
-     if(mod(nstep,10).eq.0)write(17,*) t,faceCenters(20931,1),eta(20931) 
-	 if(mod(nstep,10).eq.0)write(18,*) t, Tsunamiforce(20931)
 
-	
-		t=t+dt
+        if(mod(nstep,100).eq.0)write(11,*) t, Q1(5054) !P1
+        if(mod(nstep,100).eq.0)write(12,*) t, Q1(8758)!P2
+		if(mod(nstep,100).eq.0)write(13,*) t, Q1(741)!P3
+        if(mod(nstep,100).eq.0)write(14,*) t, Q1(4018)!P4
+		if(mod(nstep,100).eq.0)write(15,*) t, Q1(6156)!P5
+        if(mod(nstep,100).eq.0)write(16,*) t, Q1(13402)!P6
+	    t=t+dt
 
 		tscount=tscount+1
 		if(tscount==sedInterval)then

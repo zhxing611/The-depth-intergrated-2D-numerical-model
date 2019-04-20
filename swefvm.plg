@@ -6,15 +6,20 @@
 --------------------Configuration: swefvm - Win32 Release--------------------
 </h3>
 <h3>Command Lines</h3>
-Creating temporary file "C:\Users\DELL\AppData\Local\Temp\RSPC3C4.tmp" with contents
+Creating temporary file "C:\Users\mypc\AppData\Local\Temp\RSPAE1A.tmp" with contents
 [
 /compile_only /nologo /warn:nofileopt /module:"Release/" /object:"Release/" 
-"E:\tsunami force\Case with vegetation2\swe.f90"
-"E:\tsunami force\Case with vegetation2\results_output.f90"
-"E:\tsunami force\Case with vegetation2\initialization.f90"
-"E:\tsunami force\Case with vegetation2\buildMeshData.f90"
+"E:\Computer code\3.1\module.f90"
+"E:\Computer code\3.1\swefvm.f90"
+"E:\Computer code\3.1\swe.f90"
+"E:\Computer code\3.1\results_output.f90"
+"E:\Computer code\3.1\readGMSHMesh.f90"
+"E:\Computer code\3.1\initialization.f90"
+"E:\Computer code\3.1\buildMeshData.f90"
+"E:\Computer code\3.1\auxsubs.f90"
+"E:\Computer code\3.1\auxfuncs.f90"
 ]
-Creating temporary file "C:\Users\DELL\AppData\Local\Temp\RSPC3C5.tmp" with contents
+Creating temporary file "C:\Users\mypc\AppData\Local\Temp\RSPAE1B.tmp" with contents
 [
 kernel32.lib /nologo /subsystem:console /incremental:no /pdb:"Release/swefvm.pdb" /machine:I386 /out:"Release/swefvm.exe" 
 ".\Release\auxfuncs.obj"
@@ -22,20 +27,23 @@ kernel32.lib /nologo /subsystem:console /incremental:no /pdb:"Release/swefvm.pdb
 ".\Release\buildMeshData.obj"
 ".\Release\initialization.obj"
 ".\Release\module.obj"
-".\Release\readGambitMesh.obj"
 ".\Release\readGMSHMesh.obj"
-".\Release\restart_output.obj"
 ".\Release\results_output.obj"
 ".\Release\swe.obj"
 ".\Release\swefvm.obj"
 ]
-Creating command line "link.exe @C:\Users\DELL\AppData\Local\Temp\RSPC3C5.tmp"
+Creating command line "link.exe @C:\Users\mypc\AppData\Local\Temp\RSPAE1B.tmp"
 <h3>Output Window</h3>
 Compiling Fortran...
-E:\tsunami force\Case with vegetation2\swe.f90
-E:\tsunami force\Case with vegetation2\results_output.f90
-E:\tsunami force\Case with vegetation2\initialization.f90
-E:\tsunami force\Case with vegetation2\buildMeshData.f90
+E:\Computer code\3.1\module.f90
+E:\Computer code\3.1\swefvm.f90
+E:\Computer code\3.1\swe.f90
+E:\Computer code\3.1\results_output.f90
+E:\Computer code\3.1\readGMSHMesh.f90
+E:\Computer code\3.1\initialization.f90
+E:\Computer code\3.1\buildMeshData.f90
+E:\Computer code\3.1\auxsubs.f90
+E:\Computer code\3.1\auxfuncs.f90
 Linking...
 
 
