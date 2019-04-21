@@ -24,7 +24,7 @@ Novelty: The depth-averaged 2D hydrodynamic model is further modified by introdu
 
 (2) Before running program, users need to build a new "input" folder which contains "ctr.DAT" file and "untitled.MSH" file provided in Title "Code", and a "result " folder which is used for storing output results.
 
-(3) Users can click main program “swefvm.dsw” and enter the compilation environment to modify computer code and execute the program. The Option “!” is used to execute the program.
+(3) Users can click main program “swefvm.dsw” and enter the compilation environment to modify computer code and execute the program.
 
 # Model application
 The computer code under Title "Code" is used to simulate tsunami propagation on a real-scale vegetated beach. Present numerical  are validated by three experimental cases of dam-break flow in a dry channel with a hump (3.1), solitary wave through a vegetated channel (3.2) and tsunami wave run-up in Monai Valley (3.3). The setting of corresponding conditions in computer code for these three experimental cases can be found in Subtitle "branch" under Title "Code".
