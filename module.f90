@@ -15,13 +15,9 @@
 !    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 !    GNU General Public License for more details.
 !
-!    You should have received a copy of the GNU General Public License
-!    along with HydroSed2D.  If not, see <http://www.gnu.org/licenses/>.
-!
 !    Base on HydroSed2D, Mingliang Zhang and Hongxing Zhang further developed the depth-averaged 2D hydrodynamic model 
-!    by introducing treatment technology of wet-dry boundary and considering vegetation effects. 
+!    by introducing treatment technology of wet-dry boundary. 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
 MODULE  COMMON_MODULE 
 		!plat form indicator: 1-windows(cvf6.0), 2-linux(gfortran)
 		integer*4 platform
@@ -29,8 +25,8 @@ MODULE  COMMON_MODULE
 
         integer*4 maxnodes_, maxedges_, maxfaces_, maxboundaryedges_,&
 				  maxboundarypoints_,maxnodefaces_
-        parameter(maxnodes_ = 20000, maxedges_ = 60000, maxfaces_ = 60000, &
-		          maxboundaryedges_ = 50000,maxboundarypoints_=10000,maxnodefaces_=10)
+        parameter(maxnodes_ = 16200, maxedges_ = 40000, maxfaces_ = 32000, &
+		          maxboundaryedges_ = 1250,maxboundarypoints_=2500,maxnodefaces_=10)
 
 		integer*4 ELEDGES       !maximum edges for each cell
 		parameter(ELEDGES=3)
@@ -76,13 +72,12 @@ MODULE  COMMON_MODULE
 		REAL(8),DIMENSION(maxfaces_,3)::faceLimiters
 		!slope limiters for three conservative variables
 		!see Anastasiou & Chan, 1997
-		REAL(8),DIMENSION(maxfaces_)::etaLimiter,csedLimiter
+		REAL(8),DIMENSION(maxfaces_)::etaLimiter
 	
 !		faces' edge normal vectors (pointing outside of the triangle)
 		real*8 faceEdgeNormals( maxfaces_, ELEDGES, 3)
-        real*8 CBFlux( maxfaces_, ELEDGES, 2)
 
-	    INTEGER,DIMENSION(maxfaces_, ELEDGES)::binfo
+	    INTEGER,DIMENSION(maxfaces_, ELEDGES)::binfo,idry,iwet
 		!binfo:boundary info for each edge, 1-inlet, 2-outlet, 3-wall, 4-internal
 
 		integer,dimension(maxfaces_)::pinfo
@@ -93,7 +88,7 @@ MODULE  COMMON_MODULE
 !                     lower number face always be owner
 !                     at least owner exists
         integer*4 edgeFaces( maxedges_, 2)
-        integer*4 edgedrywet( maxedges_)
+
 !       point location marker(where is the point located)
 !       e.g.: 1    internal, 0   outside of domain
         integer*4 pointMarkers( maxnodes_ ) 
@@ -113,11 +108,12 @@ MODULE  COMMON_MODULE
 		!nFaces: number of cells in the whole domain (wet plus dry)
 
 	    integer*4 calc_flag( maxfaces_ ) 
+		integer*4 edgedrywet( maxedges_)
 !		calculation flag = 0 not in the calculation domain
 !                        = 1 in the calculation domain
 
-		REAL(8),DIMENSION(maxfaces_)::HiVi1,HiVi2,HiVi3,HiVi3_c,FdotN1,FdotN2,gradcsedx,gradcsedy,&
-									  FdotN3,FdotN4_c,Q1,Q2,Q3,Q4_c,csed,Q1max,UMmax,VNmax,deep,velocityx,velocityy,Qs,FdotN4,bednet,Cd,Tsunamiforce,Dragforce
+		REAL(8),DIMENSION(maxfaces_)::HiVi1,HiVi2,HiVi3,HiVi3_c,FdotN1,FdotN2,&
+									  FdotN3,FdotN4_c,Q1,Q2,Q3,Q4_c
 		!Q1:cell center xi value (free surface elevation)
 		!Q2:cell center value of uh
 		!Q3:cell center value of vh
@@ -131,7 +127,7 @@ MODULE  COMMON_MODULE
 		!FdotN4_c: Result of vector operation F.n for sediment
 		!Hivi4_c:  Source term vector component 3- sh
 
-		REAL(8),DIMENSION(maxfaces_,2)::gradQ1,gradQ2,gradQ3,gradU,gradV,gradEta,gradcsed
+		REAL(8),DIMENSION(maxfaces_,2)::gradQ1,gradQ2,gradQ3,gradU,gradV,gradEta
 		!gradQ1: cell center gradient of xi
 		!gradQ2: cell center gradient of uh
 		!gradQ3: cell center gradient of vh
@@ -139,10 +135,12 @@ MODULE  COMMON_MODULE
 		!gradV : cell center gradient of v
 		!gradEta : cell center gradient of eta
 
-		REAL(8),DIMENSION(maxedges_,2)::edgeGradU,edgeGradV,edgeGcsed
-		REAL(8),DIMENSION(maxedges_)::edgeQ1,edgeLimiter,LimiterR
-        REAL(8),DIMENSION(maxfaces_,ELEDGES)::UQ,csedR,csedB
-		REAL(8),DIMENSION(maxfaces_)::Rem1,Rem2,Rem3,Rem4,oldRem1,oldRem2,oldRem3,oldRem4
+		REAL(8),DIMENSION(maxedges_,2)::edgeGradU,edgeGradV
+		REAL(8),DIMENSION(maxedges_)::edgeQ1
+
+		real*8 pcoortemp( maxnodes_, 3)
+
+		REAL(8),DIMENSION(maxfaces_)::Rem1,Rem2,Rem3,oldRem1,oldRem2,oldRem3
 		!Rem1(maxfaces_)        \     this term = -F.n + Source terms
 		!Rem2(maxfaces_)         >=   eq 4.41 in First Year report = d(Vq)/dt
 		!Rem3(maxfaces_)        /     eq (22) in resubmitted paper = d(Vq)/dt
@@ -161,7 +159,7 @@ MODULE  COMMON_MODULE
 
 		REAL(8),DIMENSION(maxfaces_)::DYY
 
-		REAL(8),DIMENSION(maxfaces_,ELEDGES)::Qb1,Qb2,Qb3,Etab,lambda1,lambda2,lambda3
+		REAL(8),DIMENSION(maxfaces_,ELEDGES)::Qb1,Qb2,Qb3,Etab,lambda1,lambda2,lambda3,UbR,UbL,UQ2,UQ3
 		!Qb1:Q1 at edge
 		!Qb2:Q2 at edge
 		!Qb3:Q3 at edge
@@ -171,14 +169,12 @@ MODULE  COMMON_MODULE
 		!lambda3(maxfaces_,3)   = Eigenvalue1 based on Roe-type averages
 
 		!for ghost cells
-		REAL(8),DIMENSION(maxboundaryedges_)::gQb1,gQb2,gQb3,gUQ
+		REAL(8),DIMENSION(maxboundaryedges_)::gQb1,gQb2,gQb3,gUbL,gUQ2,gUQ3
 		REAL(8),DIMENSION(maxboundaryedges_)::gFIofQb1,gFIofQb2,gFIofQb3
 		REAL(8),DIMENSION(maxboundaryedges_)::gU,gV,gC,gAlpha
-		REAL(8),DIMENSION(maxboundaryedges_)::gQ1,gQ2,gQ3,gZB,gEta,gcsed
-        
+		REAL(8),DIMENSION(maxboundaryedges_)::gQ1,gQ2,gQ3,gZB,gEta
 
-		REAL(8),DIMENSION(maxfaces_,ELEDGES)::FV1,FV2,FV3,FI1,FI2,FI3,FIofQb1,FIofQb2,FIofQb3,&
-		                                      FV4,FI4,FIofQb4
+		REAL(8),DIMENSION(maxfaces_,ELEDGES)::FV1,FV2,FV3,FI1,FI2,FI3,FIofQb1,FIofQb2,FIofQb3
 		REAL(8),DIMENSION(maxfaces_,ELEDGES)::u,v,alpha,Qb1av
 		!u     = Roe-type Riemann average of u-velocity at cell interface   (Equation 16)
 		!v     = Roe-type Riemann average of v-velocity at cell interface
@@ -262,7 +258,7 @@ MODULE  COMMON_MODULE
 !       C_slope: constant for slope effect
 !       sigmac: Schmit number
 !       Rs: submerged relative gravity of sediment
-        real*8 rhos, rhow, diam, poro,porosity, thita_cri_b, thita_cri_s, &
+        real*8 rhos, rhow, diam, porosity, thita_cri_b, thita_cri_s, &
                angleofRepose, C_slope, sigmac, Rs
 
 !       Shear stress vector at each node 
@@ -287,8 +283,7 @@ MODULE  COMMON_MODULE
 !       edge center bed load sediment flus vector (qi) interpolated from face center
         real*8 edgeBedLoadFlux(maxedges_, 2)
 !       divergence of bed load flux at face center (div(qi))
-        real*8 FdotCFlux(maxfaces_)
-		real*8 divFaceBedLoadFlux(maxfaces_)
+        real*8 divFaceBedLoadFlux(maxfaces_)
 !       bed elevation change at face center
         real*8 faceElevationChange(maxfaces_)
 !       bed elevation change at node
@@ -305,9 +300,9 @@ MODULE  COMMON_MODULE
         real*8 qflat
 
 		!variables for node values
-		REAL(8),DIMENSION(maxnodes_)::nodeQ1,nodeQ2,nodeQ3,nodeZSurf,nodecsed,nodeQ1max,nodeVNmax,nodeUMmax,nodegradcsedx,nodegradcsedy,nodedeep,nodevelocityx,nodevelocityy
+		REAL(8),DIMENSION(maxnodes_)::nodeQ1,nodeQ2,nodeQ3,nodeZSurf
 		REAL(8),DIMENSION(maxnodes_)::nodeU,nodeV,nodeSox,nodeSoy 
-		REAL(8) meanH,meanU,meanV,meanC,meanvelocityx,meanvelocityy,meandeep,meanQ1max,meanUMmax,meanVNmax
+		REAL(8) meanH,meanU,meanV
         
         integer*4 ios, ierror
 
@@ -316,7 +311,13 @@ MODULE  COMMON_MODULE
 		CHARACTER(len=100)::dirname,tempfilename,reloadfile
 		integer*4 nStep
 	    integer*4 ISTAT
-	    integer aa
-		integer, parameter::nDEMPoints=61
-		real*8 wse(nDEMPoints,3)
+!      read tide
+        integer aa
+        integer, parameter::nDEMPoints=1331
+		real*8 wse(nDEMPoints,2)
+
+!for HLL
+      	REAL(8),DIMENSION(maxfaces_,ELEDGES)::USL,USR,VSL,VSR
+		REAL(8),DIMENSION(maxfaces_,ELEDGES)::UbStar,ghStar,Vstar,ghV
+	 
 END MODULE  COMMON_MODULE 

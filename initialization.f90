@@ -15,13 +15,9 @@
 !    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 !    GNU General Public License for more details.
 !
-!    You should have received a copy of the GNU General Public License
-!    along with HydroSed2D.  If not, see <http://www.gnu.org/licenses/>.
-!
 !    Base on HydroSed2D, Mingliang Zhang and Hongxing Zhang further developed the depth-averaged 2D hydrodynamic model 
-!    by introducing treatment technology of wet-dry boundary and considering vegetation effects. 
+!    by introducing treatment technology of wet-dry boundary. 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
 !   Initialization
     subroutine init
 	USE COMMON_MODULE
@@ -47,7 +43,7 @@
 
 
 	open(8, file = tempfilename, status = 'old', iostat = ios)
-   
+    
 	read(8,*)string
 	read(8,*)runtype
 	read(8,*)string
@@ -125,21 +121,19 @@
 		!read mesh file
 		if(meshType.eq.1) then   !gmsh file
 			call readGMSHMesh
-			
 		elseif(meshType.eq.2) then !gambit neutral file
-			call readGambitMesh
+!			call readGambitMesh
 		else
 			write(*,*) 'Unsupported mesh format!'
 			
 			stop
 		endif
-        
+
 		!build mesh information
 		call buildMeshData
 
 		call IC_setup
 		t=0.0D0
-
 	else
 		write(*,*) 'Run from restart'
 		call read_reload
@@ -152,6 +146,7 @@
 
 
 !c  This subroutine sets the coefficients used in the integration
+
 	subroutine int_coeffs
 	USE COMMON_MODULE,ONLY: a,b,d,t,dt
 
@@ -162,9 +157,8 @@
 		b=0.0D0
 		d=0.0D0
 	else
-		a=1.0D0
-		b=0.0D0  
-		d=0.0D0    
+		a=1.0  !3.0D0/2.0D0
+		b=0.0  !-1.0D0/2.0D0
 	end if
 
 	end subroutine
@@ -180,11 +174,10 @@
 		nb,frctl,sedimentctl,&
 		binfo,Qb1,Qb2,Qb3,drydeep,&
 		mindeep,zaolv,inctr,outctr,&
-		pinfo,t,dt,ts,td,csed,nodecsed,&
+		pinfo,t,dt,ts,td,&
 		face2DArea,faceCenters,nBoundaryEdges,&
 		gQ1,gQ2,gQ3,gZB,ghostCellsNeighbor,inletH,inletQ,UM,VN,eta,&
-		nodeQ1,nodeQ2,nodeQ3,nodeU,nodeV,nodeZSurf,gEta,calc_flag,&
-		pcoor,faceEdgesNum,facePoints
+		nodeQ1,nodeQ2,nodeQ3,nodeU,nodeV,nodeZSurf,gEta
 
 	implicit none
 	integer:: i,j,k,counttemp,rposx,rposy
@@ -196,20 +189,20 @@
 	sedweight0=0
 	ttemp=0.0
 
-
+!	call get_input_qtotal(ttemp,initq)
+!	call from_q_get_h(initq,initz)
+!   initz=0.5
 
 	do i=1,nFaces	      
 		nb(i)=zaolv
-      if(faceCenters(i,3).lt.102.0) then
-        Q1(i)=102.0-faceCenters(i,3)
+        Q1(i)=0.0
 	    Q2(i)=0.0D0								
-	    Q3(i)=0.0D0	
-  	  else	
-	     Q1(i)=0.0  
-	      Q2(i)=0.0D0							
-	     Q3(i)=0.0D0	
-     endif
-     
+	    Q3(i)=0.0D0								
+	
+		if(faceCenters(i,1).le.0.0) then
+			Q1(i)=0.25
+		end if
+
 		if(Q1(i)<=drydeep)then	
 			UM(i)=0
 			VN(i)=0
@@ -219,14 +212,13 @@
 			VN(i)=Q3(i)/Q1(i)
 			eta(i)=faceCenters(i,3)+Q1(i)
 		end if
-
 	end do
 
 	!for ghost cells, variables as gXXX
 	do i=1,nBoundaryEdges
-		if(frctl.eq.1)then   
+		if(frctl.eq.1)then   !complicated bottom
 			gZB(i)=faceCenters(ghostCellsNeighbor(i),3)
-		else                
+		else                 !uniform bottom
 			gZB(i)=0D0
 		end if
 
@@ -245,14 +237,13 @@
     end do       
 
   	!interpolate cell center Q, U and V to nodes
+	call cellCenterToNodes(Q1,nodeQ1)
+	call cellCenterToNodes(Q2,nodeQ2)
+	call cellCenterToNodes(Q3,nodeQ3)
+	call cellCenterToNodes(UM,nodeU)
+	call cellCenterToNodes(VN,nodeV)
+	call cellCenterToNodes(eta,nodeZsurf)
 
-	     call cellCenterToNodes(Q1,nodeQ1)	
-	     call cellCenterToNodes(Q2,nodeQ2)
-	     call cellCenterToNodes(Q3,nodeQ3)
-	     call cellCenterToNodes(UM,nodeU)
-	     call cellCenterToNodes(VN,nodeV)
-	     call cellCenterToNodes(eta,nodeZsurf)
-         call cellCenterToNodes(csed,nodecsed)
 
 	if(sedimentctl.eq.1)then
 	end if
