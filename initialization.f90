@@ -77,7 +77,7 @@
 	read(8,*)string
 	read(8,*)terraindeal,termax,termin
 	read(8,*)string
-	read(8,*)terrainfile              !terrainfile is a local variable
+	read(8,*)terrainfile             
 	read(8,*)string
 	read(8,*)meshType
 	read(8,*)string
@@ -163,7 +163,7 @@
 		d=0.0D0
 	else
 		a=1.0D0
-		b=0.0D0  
+		b=0.0D0 
 		d=0.0D0    
 	end if
 
@@ -198,18 +198,22 @@
 
 
 
+
+
 	do i=1,nFaces	      
 		nb(i)=zaolv
-      if(faceCenters(i,3).lt.102.0) then
-        Q1(i)=102.0-faceCenters(i,3)
-	    Q2(i)=0.0D0								
+     if(faceCenters(i,3).lt.0.12) then
+        Q1(i)=0.12-faceCenters(i,3)
+	    Q2(i)=0.0D0								 
 	    Q3(i)=0.0D0	
-  	  else	
+	   else	
 	     Q1(i)=0.0  
-	      Q2(i)=0.0D0							
+	     Q2(i)=0.0D0								
 	     Q3(i)=0.0D0	
-     endif
+ 	endif
      
+	
+
 		if(Q1(i)<=drydeep)then	
 			UM(i)=0
 			VN(i)=0
@@ -224,9 +228,9 @@
 
 	!for ghost cells, variables as gXXX
 	do i=1,nBoundaryEdges
-		if(frctl.eq.1)then   
+		if(frctl.eq.1)then   !complicated bottom
 			gZB(i)=faceCenters(ghostCellsNeighbor(i),3)
-		else                
+		else                 !uniform bottom
 			gZB(i)=0D0
 		end if
 
