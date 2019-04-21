@@ -18,8 +18,8 @@
 !    You should have received a copy of the GNU General Public License
 !    along with HydroSed2D.  If not, see <http://www.gnu.org/licenses/>.
 !
-!    Base on HydroSed2D, Mingliang Zhang and Hongxing Zhang further developed the depth-averaged 2D hydrodynamic model 
-!    by introducing treatment technology of wet-dry boundary and considering vegetation effects. 
+!  Base on HydroSed2D, Mingliang Zhang and Hongxing Zhang further developed the depth-averaged 2D hydrodynamic model 
+!  by introducing treatment technology of wet-dry boundary. 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 !   Initialization
@@ -162,8 +162,8 @@
 		b=0.0D0
 		d=0.0D0
 	else
-		a=1.0D0
-		b=0.0D0  
+		a=1.0D0 
+		b=0.0D0 
 		d=0.0D0    
 	end if
 
@@ -196,20 +196,26 @@
 	sedweight0=0
 	ttemp=0.0
 
+!	call get_input_qtotal(ttemp,initq)
+!	call from_q_get_h(initq,initz)
+
+
 
 
 	do i=1,nFaces	      
 		nb(i)=zaolv
-      if(faceCenters(i,3).lt.102.0) then
-        Q1(i)=102.0-faceCenters(i,3)
+      if(faceCenters(i,3).lt.0.135) then
+        Q1(i)=0.135-faceCenters(i,3)
 	    Q2(i)=0.0D0								
 	    Q3(i)=0.0D0	
-  	  else	
-	     Q1(i)=0.0  
+  	 else	
+	     Q1(i)=0.0 
 	      Q2(i)=0.0D0							
 	     Q3(i)=0.0D0	
      endif
-     
+    
+	
+
 		if(Q1(i)<=drydeep)then	
 			UM(i)=0
 			VN(i)=0
@@ -224,9 +230,9 @@
 
 	!for ghost cells, variables as gXXX
 	do i=1,nBoundaryEdges
-		if(frctl.eq.1)then   
+		if(frctl.eq.1)then   !complicated bottom
 			gZB(i)=faceCenters(ghostCellsNeighbor(i),3)
-		else                
+		else                 !uniform bottom
 			gZB(i)=0D0
 		end if
 
