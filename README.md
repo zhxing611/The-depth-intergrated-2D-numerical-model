@@ -9,7 +9,7 @@ Year first available: 2008
 
 Telephone number: 00186-0411-84763189
 
-Program size: 1.38 MB
+Program size: 1.05 MB
 
 Novelty: The depth-averaged 2D hydrodynamic model is further modified by introducing treatment technology of wet-dry boundary and considering vegetation effects base on a two-dimensional numerical model for hydrodynamics and sediment transport (HydroSed2D). 
 
@@ -27,4 +27,4 @@ Novelty: The depth-averaged 2D hydrodynamic model is further modified by introdu
 (3) Users can click main program “swefvm.dsw” and enter the compilation environment to modify computer code and execute the program. The Option “!” is used to execute the program.
 
 # Model application
-The computer code under Title "Code" is used to simulate tsunami propagation on a real-scale vegetated beach. Present numerical  are validated by three experimental cases of dam-break flow in a dry channel with a hump, solitary wave through a vegetated channel and tsunami wave run-up in Monai Valley. The setting of corresponding conditions in computer code for these three experimental cases can be found in Subtitle "branch" under Title "Code".
+The computer code under Title "Code" is used to simulate tsunami propagation on a real-scale vegetated beach. Present numerical  are validated by three experimental cases of dam-break flow in a dry channel with a hump (3.1), solitary wave through a vegetated channel (3.2) and tsunami wave run-up in Monai Valley (3.3). The setting of corresponding conditions in computer code for these three experimental cases can be found in Subtitle "branch" under Title "Code".
